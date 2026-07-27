@@ -135,13 +135,13 @@ function initFlowerCanvas() {
     let flowers = [];
     
 
-    // --- CÓDIGO NUEVO PARA COBRIR TODA LA PANTALLA ---
+
     function generateBouquet() {
     flowers = [];
-    const totalFlowers = 400; // Subimos la cantidad de flores
+    const totalFlowers = 400; // Subir la cantidad de flores
 
     for (let i = 0; i < totalFlowers; i++) {
-        // Distribuimos las flores por TODA la pantalla dejando un pequeño margen
+        // Distribuir las flores por TODA la pantalla dejando un pequeño margen
         const x = Math.random() * canvas.width;
         const y = Math.random() * canvas.height;
 
