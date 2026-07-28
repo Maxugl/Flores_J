@@ -1,4 +1,16 @@
 document.getElementById('btn-iniciar').addEventListener('click', function() {
+   
+    const musica = document.getElementById('musica-fondo');
+    if (musica) {
+        musica.load();
+        musica.volume = 0.8;
+        musica.play().then(() => {
+            console.log("musica reproduciendose");  
+        }).catch(error => {
+            console.log("navegador bloquea musica:", error);
+        });
+    }
+
     this.classList.add('hidden');
     
     const garden = document.getElementById('garden');
@@ -17,15 +29,12 @@ function initFlowerCanvas() {
     }
     resizeCanvas();
 
-    // Paleta cromática variada similar a la imagen (Rosas, amarillos, magentas, naranjas, blancos, lavanda)
+   
     const colorPalettes = [
-        { petals: ['#ff1744', '#d50000', '#9b0000'], center: '#4a0000' }, // Rojo Rosa clásico
-        { petals: ['#ffd000', '#ffea00', '#d4a000'], center: '#3b2200' }, // Amarillo cálido
-        { petals: ['#ff4d8d', '#ff1a6c', '#b30047'], center: '#360015' }, // Magenta / Fucsia
-        { petals: ['#ff85a1', '#fbb1bd', '#f7cad0'], center: '#4a1525' }, // Rosa pastel
-        { petals: ['#ff7b00', '#ff9e00', '#cc5200'], center: '#331400' }, // Naranja vibrante
-        { petals: ['#ffffff', '#f4edf8', '#d0c2e0'], center: '#a37c53' }, // Blanco / Crema
-        { petals: ['#e0aaff', '#c77dff', '#7b2cbf'], center: '#240046' }  // Lavanda / Violeta
+        { petals: ['#ff1744', '#d50000', '#9b0000'], center: '#4a0000' }, // Rojo vibrante
+        { petals: ['#e60026', '#b71c1c', '#7f0000'], center: '#360000' }, // Rojo oscuro 
+        { petals: ['#ff4d6d', '#c9184a', '#800f2f'], center: '#430113' }, // Carmín profundo
+        { petals: ['#d90429', '#ef233c', '#6b0114'], center: '#2b0004' }  // Rojo fuego
     ];
 
     class Flower {
@@ -44,7 +53,6 @@ function initFlowerCanvas() {
         update(progress) {
             if (progress > this.delay) {
                 this.growthProgress = Math.min(1, (progress - this.delay) * 1.8);
-                // Función de aceleración suave (bounce suave al abrir)
                 this.currentRadius = this.maxRadius * easeOutBack(this.growthProgress);
             }
         }
@@ -56,39 +64,38 @@ function initFlowerCanvas() {
             ctx.translate(this.x, this.y);
             ctx.rotate(this.rotation);
 
-            // Sombra estilo recorte 3D de papel
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
-            ctx.shadowBlur = 10;
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.55)'; 
+            ctx.shadowBlur = 12;
             ctx.shadowOffsetX = 3;
             ctx.shadowOffsetY = 5;
 
-            // Capa exterior de pétalos
+            // Capa exterior
             this.drawPetalLayer(ctx, this.currentRadius, this.petalsCount, this.colors.petals[0], 0);
 
             // Capa intermedia
             if (this.currentRadius > 12) {
-                this.drawPetalLayer(ctx, this.currentRadius * 0.7, this.petalsCount, this.colors.petals[1], Math.PI / this.petalsCount);
+                this.drawPetalLayer(ctx, this.currentRadius * 0.73, this.petalsCount, this.colors.petals[1], Math.PI / this.petalsCount);
             }
 
-            // Capa interna de pétalos
+            // Capa interna 
             if (this.currentRadius > 22 && this.colors.petals[2]) {
-                this.drawPetalLayer(ctx, this.currentRadius * 0.42, this.petalsCount, this.colors.petals[2], 0);
+                this.drawPetalLayer(ctx, this.currentRadius * 0.45, this.petalsCount, this.colors.petals[2], 0);
             }
 
-            // Centro de la flor
-            ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+            // Centro de la rosa 
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
             ctx.shadowBlur = 4;
             ctx.shadowOffsetX = 1;
-            ctx.shadowOffsetY = 2;
+            ctx.shadowOffsetY = 3;
 
             ctx.beginPath();
-            ctx.arc(0, 0, Math.max(2, this.currentRadius * 0.22), 0, Math.PI * 2);
+            ctx.arc(0, 4, Math.max(2, this.currentRadius * 0.20), 0, Math.PI * 2);
             ctx.fillStyle = this.colors.center;
             ctx.fill();
 
-            // Puntos de luz en el centro
+            
             ctx.beginPath();
-            ctx.arc(0, 0, Math.max(1, this.currentRadius * 0.1), 0, Math.PI * 2);
+            ctx.arc(0, 4, Math.max(1, this.currentRadius * 0.08), 0, Math.PI * 2);
             ctx.fillStyle = '#ffffff';
             ctx.globalAlpha = 0.35;
             ctx.fill();
@@ -107,7 +114,6 @@ function initFlowerCanvas() {
 
                 ctx.beginPath();
                 ctx.moveTo(0, 0);
-                // Curvas Bezier para formar los pétalos orgánicos
                 ctx.bezierCurveTo(
                     -radius * 0.45, -radius * 0.5,
                     -radius * 0.5, -radius,
@@ -133,32 +139,25 @@ function initFlowerCanvas() {
     }
 
     let flowers = [];
-    
-
 
     function generateBouquet() {
-    flowers = [];
-    const totalFlowers = 400; // Subir la cantidad de flores
+        flowers = [];
+        const totalFlowers = 400; 
 
-    for (let i = 0; i < totalFlowers; i++) {
-        // Distribuir las flores por TODA la pantalla dejando un pequeño margen
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
+        for (let i = 0; i < totalFlowers; i++) {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * canvas.height;
 
-        // Tamaños variados para dar sensación de fondo completo
-        const size = Math.random() * 35 + 25; 
-        const petals = Math.floor(Math.random() * 3) + 5; 
-        const palette = colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
-        
-        // Retraso de animación distribuido al azar
-        const delay = Math.random() * 0.8; 
+            const size = Math.random() * 35 + 25; 
+            const petals = Math.floor(Math.random() * 3) + 6; 
+            const palette = colorPalettes[Math.floor(Math.random() * colorPalettes.length)];
+            const delay = Math.random() * 0.8; 
 
-        flowers.push(new Flower(x, y, size, petals, palette, delay));
+            flowers.push(new Flower(x, y, size, petals, palette, delay));
+        }
+
+        flowers.sort((a, b) => a.maxRadius - b.maxRadius);
     }
-
-    // Ordenar por tamaño para que las flores pequeñas queden sobre o bajo las grandes correctamente
-    flowers.sort((a, b) => a.maxRadius - b.maxRadius);
-}
     generateBouquet();
 
     let startTime = null;
@@ -177,7 +176,6 @@ function initFlowerCanvas() {
         if (elapsed < 1.4) {
             requestAnimationFrame(animate);
         } else {
-            // Mostrar la tarjeta del mensaje al terminar la floración
             const message = document.getElementById('message');
             message.classList.remove('hidden');
             setTimeout(() => {
