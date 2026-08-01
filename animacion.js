@@ -3,7 +3,7 @@ document.getElementById('btn-iniciar').addEventListener('click', function() {
     const musica = document.getElementById('musica-fondo');
     if (musica) {
         musica.load();
-        musica.volume = 0.8;
+        musica.volume = 0.6;
         musica.play().then(() => {
             console.log("musica reproduciendose");  
         }).catch(error => {
@@ -142,7 +142,7 @@ function initFlowerCanvas() {
 
     function generateBouquet() {
         flowers = [];
-        const totalFlowers = 400; 
+        const totalFlowers = 200; 
 
         for (let i = 0; i < totalFlowers; i++) {
             const x = Math.random() * canvas.width;
@@ -164,7 +164,7 @@ function initFlowerCanvas() {
 
     function animate(timestamp) {
         if (!startTime) startTime = timestamp;
-        const elapsed = (timestamp - startTime) / 2200;
+        const elapsed = (timestamp - startTime) / 14000;
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
